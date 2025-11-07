@@ -9,6 +9,7 @@ const getUsers = async (req, res) => {
     const result = await pool.query(
       'SELECT id, email, role, created_at FROM users ORDER BY created_at DESC'
     );
+    console.log('getUsers → найдено:', result.rows.length);
     res.json(result.rows);
   } catch (err) {
     console.error('getUsers error:', err);

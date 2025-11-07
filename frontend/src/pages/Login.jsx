@@ -14,27 +14,41 @@ export default function Login() {
 
     const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
 
+    // ← ИСПРАВЛЕНИЕ 1: Добавляем role при регистрации
+    const payload = isRegister
+      ? { email, password, role: 'user' }
+      : { email, password };
+
     try {
-      const res = await fetch(`http://localhost:3000${endpoint}`, {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
+
+      // ← ДОБАВЬ ЛОГИ (для отладки)
+      console.log('Ответ сервера:', data);
 
       if (res.ok) {
         if (isRegister) {
           alert('Регистрация успешна! Войдите.');
           setIsRegister(false);
+          setEmail('');
+          setPassword('');
         } else {
           localStorage.setItem('token', data.token);
-          navigate('/dashboard');
+          console.log('Токен сохранён:', data.token);
+
+          // ← ИСПРАВЛЕНИЕ 2: Явно указываем таб
+          navigate('/dashboard/users');
         }
       } else {
-        setError(data.error || 'Ошибка');
+        setError(data.error || 'Ошибка сервера');
       }
     } catch (err) {
+      console.error('Ошибка сети:', err);
       setError('Нет связи с сервером');
     }
   };

@@ -58,17 +58,28 @@ const updateOffer = async (req, res) => {
 };
 
 // DELETE /api/offers/:id
+// backend/controllers/offerController.js
 const deleteOffer = async (req, res) => {
+  console.log('ВЫЗВАН deleteOffer! ID:', req.params.id);
   const { id } = req.params;
 
+  console.log('DELETE /offers/:id → id:', id); // ← ДОБАВЬ!
+
   try {
-    const result = await pool.query('DELETE FROM offers WHERE id = $1 RETURNING id', [id]);
+    const result = await pool.query(
+      'DELETE FROM offers WHERE id = $1 RETURNING id',
+      [id]
+    );
+
+    console.log('Удалено строк:', result.rowCount); // ← ДОБАВЬ!
+
     if (result.rowCount === 0) {
       return res.status(404).json({ error: 'Предложение не найдено' });
     }
-    res.json({ success: true, message: 'Предложение удалено' });
+
+    res.json({ message: 'Удалено' });
   } catch (err) {
-    console.error('deleteOffer error:', err);
+    console.error('Ошибка удаления:', err.message); // ← ДОБАВЬ!
     res.status(500).json({ error: 'Ошибка сервера' });
   }
 };

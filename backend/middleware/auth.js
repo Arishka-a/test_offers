@@ -1,17 +1,19 @@
 // backend/middleware/auth.js
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key';
 
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+module.exports = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Токен отсутствует' });
+  }
 
-  if (!token) return res.status(401).json({ error: 'Токен не предоставлен' });
-
-  jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
-    if (err) return res.status(403).json({ error: 'Недействительный токен' });
-    req.user = user; // { id, email, role }
+  const token = authHeader.split(' ')[1];
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.user = payload;
     next();
-  });
-}
-
-module.exports = authenticateToken;
+  } catch (err) {
+    return res.status(401).json({ error: 'Неверный токен' });
+  }
+};

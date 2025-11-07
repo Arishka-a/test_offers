@@ -7,7 +7,7 @@ const { getOffers, createOffer, updateOffer, deleteOffer } = require('../control
 // Защищённые роуты
 router.get('/', authenticateToken, getOffers);
 router.post('/', authenticateToken, createOffer);
-router.put('/:id', authenticateToken, updateOffer);        // ← ДОБАВИЛИ
-router.delete('/:id', authenticateToken, deleteOffer);     // ← ДОБАВИЛИ
+router.put('/:id', authenticateToken, updateOffer);       
+router.delete('/:id', authenticateToken, deleteOffer);    
 
 module.exports = router;
