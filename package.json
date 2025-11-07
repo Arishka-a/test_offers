@@ -1,0 +1,21 @@
+{
+  "name": "test_offers",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:my-project\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:my-project": "cd my-project && npm run dev",
+    "build": "cd my-project && npm run build",
+    "start": "cd backend && npm run start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
